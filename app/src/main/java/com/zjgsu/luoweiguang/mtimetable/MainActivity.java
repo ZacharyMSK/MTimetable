@@ -1,76 +1,97 @@
 package com.zjgsu.luoweiguang.mtimetable;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.List;
+public class MainActivity extends FragmentActivity implements OnClickListener {
 
+    private Button button1;
+    private Button button2;
+    private Button button3;
+    private Button button4;
+    private FragmentTransaction transaction;
+    private FragmentManager  manager;
+    private FragmentTransaction transactiona;
+    private FragmentTransaction transactionb;
+    private FragmentTransaction transactionc;
+    private FragmentTransaction transactiond;
+//depart
 
-public class MainActivity extends Activity {
-
-    private View view1, view2, view3;
-    private ViewPager viewPager;  //对应的viewPager
-
-    private List<View> viewList;//view数组
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        LayoutInflater inflater = getLayoutInflater();
-        view1 = inflater.inflate(R.layout.layout1, null);
-        view2 = inflater.inflate(R.layout.layout2, null);
-        view3 = inflater.inflate(R.layout.layout3, null);
-
-        viewList = new ArrayList<View>();// 将要分页显示的View装入数组中
-        viewList.add(view1);
-        viewList.add(view2);
-        viewList.add(view3);
-
-
-        PagerAdapter pagerAdapter = new PagerAdapter() {
-
-            @Override
-            public boolean isViewFromObject(View arg0, Object arg1) {
-                // TODO Auto-generated method stub
-                return arg0 == arg1;
-            }
-
-            @Override
-            public int getCount() {
-                // TODO Auto-generated method stub
-                return viewList.size();
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position,
-                                    Object object) {
-                // TODO Auto-generated method stub
-                container.removeView(viewList.get(position));
-            }
-
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                // TODO Auto-generated method stub
-                container.addView(viewList.get(position));
+        manager=getSupportFragmentManager();//获取fragment管理者
+        transaction=manager.beginTransaction();//通过管理者开启事务
+        button1=(Button)findViewById(R.id.button1);
+        button2=(Button)findViewById(R.id.button2);
+        button3=(Button)findViewById(R.id.button3);
+        button4=(Button)findViewById(R.id.button4);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+        button4.setOnClickListener(this);
 
 
-                return viewList.get(position);
-            }
-        };
+        FragmentA fa=new FragmentA();//首先加载第一个界面
+        transaction.add(R.id.line, fa);
+        transaction.commit();//非常关键  这句话的意思提交  没有这句的话  是没有反应的
+    }
 
-
-        viewPager.setAdapter(pagerAdapter);
+    @Override
+    protected void onStart() {
+        super.onStart();
 
     }
+
+    @Override
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+        switch (v.getId()) {
+            case R.id.button1:
+                transactiona=manager.beginTransaction();
+                FragmentA fa=new FragmentA();
+                transactiona.replace(R.id.line, fa);
+                transactiona.commit();
+                break;
+            case R.id.button2:
+                transactionb=manager.beginTransaction();
+                FragmentB fb=new FragmentB();
+                transactionb.replace(R.id.line, fb);
+                transactionb.commit();
+                break;
+            case R.id.button3:
+                transactionc=manager.beginTransaction();
+                FragmentC fc=new FragmentC();
+                transactionc.replace(R.id.line, fc);
+                transactionc.commit();
+                break;
+            case R.id.button4:
+                transactionc=manager.beginTransaction();
+                FragmentD fd=new FragmentD();
+                transactionc.replace(R.id.line, fd);
+                transactionc.commit();
+                break;
+            default:
+                break;
+        }
+    }
+
+//depart
+public boolean onCreateOptionsMenu(Menu menu) {
+    // Inflate the menu; this adds items to the action bar if it is present.
+    getMenuInflater().inflate(R.menu.activity_main, menu);
+    return true;
 }
 
+
+
+}
