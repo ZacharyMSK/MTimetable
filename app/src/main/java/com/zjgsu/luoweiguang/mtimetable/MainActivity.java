@@ -1,92 +1,76 @@
 package com.zjgsu.luoweiguang.mtimetable;
 
-import android.content.pm.PackageManager;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    public LocationClient mLocationClient;
-    private TextView positionText;
+
+public class MainActivity extends Activity {
+
+    private View view1, view2, view3;
+    private ViewPager viewPager;  //对应的viewPager
+
+    private List<View> viewList;//view数组
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mLocationClient =new LocationClient(getApplicationContext());
-        mLocationClient.registerLocationListener(new MyLocationListener());
-        positionText = (TextView) findViewById(R.id.postion_text_view);
-        List<String> permissionList =new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(MainActivity.this,android.Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-            permissionList.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-        if (ContextCompat.checkSelfPermission(MainActivity.this,android.Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED){
-            permissionList.add(android.Manifest.permission.READ_PHONE_STATE);
-        }
-        if (ContextCompat.checkSelfPermission(MainActivity.this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-            permissionList.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        if (!permissionList.isEmpty()){
-            String[] permissions=permissionList.toArray(new String[permissionList.size()]);
-            ActivityCompat.requestPermissions(MainActivity.this,permissions,1);
-        }else {
-            requestLocation();
-        }
-    }
-    private void requestLocation(){
-        mLocationClient.start();
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults){
-        switch (requestCode){
-            case 1:
-               if (grantResults.length>0){
-                   for (int result:grantResults){
-                       if (result!=PackageManager.PERMISSION_GRANTED){
-                           Toast.makeText(this,"必须同意所有权限才能使用本程序",Toast.LENGTH_SHORT).show();
-                           finish();
-                           return;
-                       }
-                   }
-               }else {
-                   Toast.makeText(this,"发生未知错误",Toast.LENGTH_SHORT).show();
-                   finish();
-               }
-               break;
-            default:
-        }
-    }
-    public class MyLocationListener implements BDLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation location){
-            StringBuilder currentPosition =new StringBuilder();
-            currentPosition.append("纬度:").append(location.getLatitude()).append("\n");
-            currentPosition.append("经线:").append(location.getLongitude()).append("\n");
-            currentPosition.append("定位方式：");
-            if (location.getLocType()==BDLocation.TypeGpsLocation){
-                currentPosition.append("GPS");
-            }else if (location.getLocType()==BDLocation.TypeNetWorkLocation){
-                currentPosition.append("网络");
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        LayoutInflater inflater = getLayoutInflater();
+        view1 = inflater.inflate(R.layout.layout1, null);
+        view2 = inflater.inflate(R.layout.layout2, null);
+        view3 = inflater.inflate(R.layout.layout3, null);
+
+        viewList = new ArrayList<View>();// 将要分页显示的View装入数组中
+        viewList.add(view1);
+        viewList.add(view2);
+        viewList.add(view3);
+
+
+        PagerAdapter pagerAdapter = new PagerAdapter() {
+
+            @Override
+            public boolean isViewFromObject(View arg0, Object arg1) {
+                // TODO Auto-generated method stub
+                return arg0 == arg1;
             }
-            positionText.setText(currentPosition);
-        }
 
-        @Override
-        public void onConnectHotSpotMessage(String s, int i) {
+            @Override
+            public int getCount() {
+                // TODO Auto-generated method stub
+                return viewList.size();
+            }
 
-        }
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+            @Override
+            public void destroyItem(ViewGroup container, int position,
+                                    Object object) {
+                // TODO Auto-generated method stub
+                container.removeView(viewList.get(position));
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                // TODO Auto-generated method stub
+                container.addView(viewList.get(position));
+
+
+                return viewList.get(position);
+            }
+        };
+
+
+        viewPager.setAdapter(pagerAdapter);
+
     }
 }
+
