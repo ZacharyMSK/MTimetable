@@ -17,7 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".LableLoactionAcitvity" />
-        <activity android:name=".CalenderViewActivity"></activity>
+        <activity android:name=".CalenderViewActivity" />
+        <activity android:name=".ScheduleDeleteActivity" />
+        <activity android:name=".ScheduleAddActivity"></activity>
     </application>
 
 </manifest>

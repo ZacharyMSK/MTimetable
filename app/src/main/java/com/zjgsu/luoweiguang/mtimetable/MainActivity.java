@@ -1,5 +1,6 @@
 package com.zjgsu.luoweiguang.mtimetable;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -15,13 +16,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     private Button button2;
     private Button button3;
     private Button button4;
+    private Button button5;
     private FragmentTransaction transaction;
     private FragmentManager  manager;
     private FragmentTransaction transactiona;
     private FragmentTransaction transactionb;
     private FragmentTransaction transactionc;
     private FragmentTransaction transactiond;
-//depart
+
 
 
 
@@ -35,22 +37,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         button2=(Button)findViewById(R.id.button2);
         button3=(Button)findViewById(R.id.button3);
         button4=(Button)findViewById(R.id.button4);
+        button5=(Button)findViewById(R.id.button5);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
-
+        button5.setOnClickListener(this);
 
         FragmentA fa=new FragmentA();//首先加载第一个界面
         transaction.add(R.id.line, fa);
         transaction.commit();//非常关键  这句话的意思提交  没有这句的话  是没有反应的
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -75,10 +74,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
                 transactionc.commit();
                 break;
             case R.id.button4:
-                transactionc=manager.beginTransaction();
+                transactiond=manager.beginTransaction();
                 FragmentD fd=new FragmentD();
-                transactionc.replace(R.id.line, fd);
-                transactionc.commit();
+                transactiond.replace(R.id.line, fd);
+                transactiond.commit();
+                break;
+            case R.id.button5:
+                Intent intent =new Intent(MainActivity.this,ScheduleAddActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
